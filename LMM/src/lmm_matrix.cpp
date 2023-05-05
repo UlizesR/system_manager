@@ -172,9 +172,6 @@ namespace lmm
         return I;
     }
 
-
-
-
     float mat_determinant(Mat a)
     {
         int n = a.size();

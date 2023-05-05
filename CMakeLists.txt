@@ -25,12 +25,12 @@ target_include_directories(lmm
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/LMM/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/LMM>
     PRIVATE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/LMM
+        ${CMAKE_CURRENT_SOURCE_DIR}/LMM/include
 )
 
 
 # Add the app executable
-add_executable(app main.cpp)
+add_executable(app ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 # Link the app to the LMM library
 target_link_libraries(app LMM)
