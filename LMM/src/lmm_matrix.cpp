@@ -89,13 +89,6 @@ namespace lmm
         return c;
     }
 
-
-
-    // Vec mat_vec_mul(Mat a, Vec b)
-    // {
-
-    // }
-
     Mat mat_transpose(Mat a)
     {
         int rows = a.size();
@@ -127,49 +120,58 @@ namespace lmm
 
     Mat mat_inverse(Mat a)
     {
-        int rows = a.size();
-        int cols = 0;
-        if (rows > 0) {
-            cols = a[0].size();
-        } else {
+        int n = a.size();
+        if (n == 0) {
             return a;
         }
-
-        if (rows != cols) throw std::invalid_argument(LMM_MATRIX_DIMENSION_ERROR);
+        int m = a[0].size();
+        if (n != m) {
+            throw std::invalid_argument(LMM_MATRIX_DIMENSION_ERROR);
+        }
 
         // Create an identity matrix
-        Mat I = mat_identity(rows);
+        Mat I = mat_identity(n);
 
-        // Perform LU factorization
-        for (int k = 0; k < rows; k++) {
-            for (int i = k + 1; i < rows; i++) {
-                double factor = a[i][k] / a[k][k];
-                for (int j = k + 1; j < rows; j++) {
+        // Perform LU decomposition with partial pivoting
+        for (int k = 0; k < n; k++) {
+            int p = k;
+            for (int i = k + 1; i < n; i++) {
+                if (fabs(a[i][k]) > fabs(a[p][k])) {
+                    p = i;
+                }
+            }
+            if (p != k) {
+                swap(a[k], a[p]);
+                swap(I[k], I[p]);
+            }
+            if (fabs(a[k][k]) < 1e-10) {
+                throw std::invalid_argument(LMM_MATRIX_SINGULAR_ERROR);
+            }
+            for (int i = k + 1; i < n; i++) {
+                float factor = a[i][k] / a[k][k];
+                for (int j = k + 1; j < n; j++) {
                     a[i][j] -= factor * a[k][j];
+                }
+                for (int j = 0; j < n; j++) {
+                    I[i][j] -= factor * I[k][j];
                 }
                 a[i][k] = factor;
             }
         }
 
-        // Solve for inverse using forward and backward substitution
-        for (int k = 0; k < rows; k++) {
-            for (int j = 0; j < cols; j++) {
-                double sum1 = 0;
-                double sum2 = 0;
-                for (int i = 0; i < k; i++) {
-                    sum1 += a[k][i] * I[i][j];
-                }
-                I[k][j] = (j == k) ? 1 - sum1 : -sum1;
-                for (int i = k + 1; i < rows; i++) {
-                    sum2 += a[k][i] * I[i][j];
+        // Solve for inverse using back substitution
+        for (int k = n - 1; k >= 0; k--) {
+            for (int j = 0; j < n; j++) {
+                for (int i = k + 1; i < n; i++) {
+                    I[k][j] -= a[k][i] * I[i][j];
                 }
                 I[k][j] /= a[k][k];
-                I[k][j] -= sum2 / a[k][k];
             }
         }
 
         return I;
     }
+
 
 
 
