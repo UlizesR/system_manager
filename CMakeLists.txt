@@ -1,35 +1,36 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Set the project name and version
-project(LLM LANGUAGES C CXX)
+project(LMM LANGUAGES CXX)
 
 # Set the C++ standard
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
-# Collect all .c files in the LLM/src folder and its subdirectories
-file(GLOB_RECURSE LLM_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/LLM/src/*.c"
+# Collect all .c files in the LMM/src folder and its subdirectories
+file(GLOB_RECURSE LMM_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/LMM/src/*.cpp"
 )
 
-# Add the LLM library
-add_library(llm STATIC ${LLM_SOURCES})
 
-# Set the include directories for the LLM library
-target_include_directories(llm
+# Add the LMM library
+add_library(lmm STATIC ${LMM_SOURCES})
+
+# Set the include directories for the LMM library
+target_include_directories(lmm
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/LLM/src>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/LLM/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/LLM/include/LLM>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/LMM/src>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/LMM/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/LMM>
     PRIVATE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/LLM/include/LLM
+        ${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/LMM
 )
 
 
 # Add the app executable
 add_executable(app main.cpp)
 
-# Link the app to the LLM library
-target_link_libraries(app llm)
+# Link the app to the LMM library
+target_link_libraries(app LMM)
