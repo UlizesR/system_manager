@@ -209,6 +209,115 @@ namespace lmm
         return det * sign;
     }
 
+    Mat mat_rref(Mat a)
+    {
+        int lead = 0;
+        int rowCount = a.size();
+        int columnCount = a[0].size();
+        for (int r = 0; r < rowCount; r++) {
+            if (columnCount <= lead) {
+                break;
+            }
+            int i = r;
+            while (i < rowCount && a[i][lead] == 0) {
+                i++;
+            }
+            if (i == rowCount) {
+                i = r;
+                lead++;
+                continue;
+            }
+            swap(a[i], a[r]);
+            double val = a[r][lead];
+            for (int j = 0; j < columnCount; j++) {
+                a[r][j] /= val;
+            }
+            for (int j = 0; j < rowCount; j++) {
+                if (j != r) {
+                    double val = a[j][lead];
+                    for (int k = 0; k < columnCount; k++) {
+                        a[j][k] -= val * a[r][k];
+                    }
+                }
+            }
+            lead++;
+        }
+        return a;
+    }
+
+    int mat_rank(Mat a)
+    {
+        Mat rref = mat_rref(a);
+        int rank = 0;
+        for (int i = 0; i < rref.size(); i++) {
+            if (*std::max_element(rref[i].begin(), rref[i].end()) != 0) {
+                rank++;
+            }
+        }
+        return rank;
+    }
+
+    int mat_dim(Mat a)
+    {
+        int rowCount = a.size();
+        int columnCount = a[0].size();
+        Mat rref = mat_rref(a);
+        int rank = 0;
+        for (int i = 0; i < rref.size(); i++) {
+            if (*std::max_element(rref[i].begin(), rref[i].end()) != 0) {
+                rank++;
+            }
+        }
+        int nullity = columnCount - rank;
+        return nullity;
+    }
+
+    Vec mat_null(Mat a) {
+        int nullity = mat_dim(a);
+        Vec nullVec(nullity, 0);
+        int columnCount = a[0].size();
+        Mat rref = mat_rref(a);
+        for (int i = 0, j = 0; i < columnCount && j < nullity; i++) {
+            if (std::find(rref[j].begin(), rref[j].end(), 1) == rref[j].end()) {
+                nullVec[j++] = 1;
+            }
+            else {
+                j++;
+            }
+        }
+        return nullVec;
+    }
+
+
+    Mat mat_col(Mat a)
+    {
+        int rowCount = a.size();
+        int columnCount = a[0].size();
+        Mat rref = mat_rref(a);
+        Mat colSpace(columnCount);
+        for (int i = 0, j = 0; i < columnCount && j < rowCount; i++) {
+            if (std::find(rref[j].begin(), rref[j].end(), 1) != rref[j].end()) {
+                colSpace[i] = a[j++];
+            }
+            else {
+                colSpace[i] = Vec(rowCount, 0);
+            }
+        }
+        return colSpace;
+    }
+
+    Mat mat_row(Mat a)
+    {
+        Mat rref = mat_rref(a);
+        Mat rowSpace;
+        for (int i = 0; i < rref.size(); i++) {
+            if (*std::max_element(rref[i].begin(), rref[i].end()) != 0) {
+                rowSpace.push_back(rref[i]);
+            }
+        }
+        return rowSpace;
+    }
+
     void mat_print(Mat a)
     {
         for (int i = 0; i < a.size(); i++) {

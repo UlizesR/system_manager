@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 
     std::cout << "Summation of squares from 1 to 10: " << lmm::summation(square, 1, 10) << std::endl;
 
-    
+
     return 0;
 }
 

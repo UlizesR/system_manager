@@ -19,6 +19,14 @@ namespace lmm
     float mat_determinant(Mat a);
     Mat mat_identity(int n);
 
+    Mat mat_rref(Mat a);
+
+    int mat_rank(Mat a);
+    int mat_dim(Mat a);
+    Vec mat_null(Mat a);
+    Mat mat_col(Mat a);
+    Mat mat_row(Mat a);
+
     void mat_print(Mat a);
 }
 

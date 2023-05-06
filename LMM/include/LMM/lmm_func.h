@@ -8,6 +8,7 @@
 namespace lmm
 {
     typedef std::function<double(double)> Func;
+    
 }
 
 #endif // LMM_FUNC_H
