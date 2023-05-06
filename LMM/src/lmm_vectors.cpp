@@ -1,6 +1,8 @@
 #include "lmm_vectors.h"
 #include "lmm_errors.h"
 #include <cmath>
+#include <iostream>
+#include <iomanip>
 
 namespace lmm {
     Vec vec_add(Vec a, Vec b)
@@ -57,5 +59,11 @@ namespace lmm {
         Vec c;
         for (int i = 0; i < a.size(); i++) c.push_back(a[i] / length);
         return c;
+    }
+
+    void vec_print(Vec a)
+    {
+        for (int i = 0; i < a.size(); i++) std::cout << "| " << a[i] << " |\n"; 
+        std::cout << std::endl;
     }
 }

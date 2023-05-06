@@ -18,6 +18,8 @@ namespace lmm
     Mat mat_inverse(Mat a);
     float mat_determinant(Mat a);
     Mat mat_identity(int n);
+
+    void mat_print(Mat a);
 }
 
 #endif // LMM_MATRIX_H

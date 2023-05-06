@@ -20,6 +20,8 @@ namespace lmm
     float vec_length(Vec a);
     Vec vec_normalize(Vec a);
 
+    void vec_print(Vec a);
+
 } // namespace lmm
 
 #endif // LMM_VECTORS_H

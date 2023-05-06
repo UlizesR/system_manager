@@ -1,6 +1,9 @@
 #include "lmm_matrix.h"
 #include "lmm_errors.h"
- #include <thread>
+#include <thread>
+#include <iostream>
+#include <iomanip>
+ 
 namespace lmm
 {
     Mat mat_add(Mat a, Mat b)
@@ -204,6 +207,17 @@ namespace lmm
         }
 
         return det * sign;
+    }
+
+    void mat_print(Mat a)
+    {
+        for (int i = 0; i < a.size(); i++) {
+            std::cout << "| ";
+            for (int j = 0; j < a[i].size(); j++) {
+                std::cout << std::setw(a.size()) << a[i][j] << " ";    
+            }
+            std::cout << " |"<< std::endl;
+        }
     }
 
 }
