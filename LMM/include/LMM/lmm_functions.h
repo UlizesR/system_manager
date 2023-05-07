@@ -1,9 +1,10 @@
 #pragma once
 
-#ifndef LMM_OPERATIONS_H
-#define LMM_OPERATIONS_H
+#ifndef LMM_FUNCTIONS_H
+#define LMM_FUNCTIONS_H
 
 #include <functional>
+#include <raylib.h>
 
 namespace lmm
 {
@@ -17,8 +18,8 @@ namespace lmm
     double combination(int n, int k);
     float binomial(int n, int k, float p);
 
-    
+  
 
 }
 
-#endif // LMM_OPERATIONS_H
+#endif // LMM_FUNCTIONS_H

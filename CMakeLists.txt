@@ -4,8 +4,11 @@ cmake_minimum_required(VERSION 3.10)
 project(LMM LANGUAGES CXX)
 
 # Set the C++ standard
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Find the installed raylib package
+find_package(raylib 3.0 REQUIRED)
 
 # Collect all .c and .m files in the LMM/src folder and its subdirectories, and all .h files in LMM/include
 file(GLOB_RECURSE LMM_SOURCES
@@ -29,4 +32,4 @@ target_include_directories(lmm
 add_executable(app app/main.cpp)
 
 # Link the app to the LMM library
-target_link_libraries(app lmm)
+target_link_libraries(app lmm raylib)

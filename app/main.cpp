@@ -1,21 +1,19 @@
 #include <iostream>
 #include <iomanip>
 #include <LMM/LMM.h>
+#include <cmath>
 
-float square(float x)
-{
+double func1(double x) {
     return x * x;
 }
 
-int main(int argc, char *argv[]) 
-{
-    
-
-    std::cout << "Factorial of 5: " << lmm::factorial(5) << std::endl;
-
-    std::cout << "Summation of squares from 1 to 10: " << lmm::summation(square, 1, 10) << std::endl;
-
-
-    return 0;
+double func2(double x) {
+    return sin(x);
 }
 
+int main() {
+    lmm::Graph graph(800, 600);
+    std::pair<lmm::Func, Color> funcs[] = {{func1, RED}, {func2, BLUE}};
+    graph.Draw(funcs, 2);
+    return 0;
+}
