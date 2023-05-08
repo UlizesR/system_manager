@@ -27,6 +27,7 @@ target_include_directories(lmm
     PRIVATE 
         ${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/LMM
         ${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/physics
+        ${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/visuals
 )
 
 # Add the example executable

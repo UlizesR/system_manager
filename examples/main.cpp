@@ -5,7 +5,7 @@
 
 int main() {
     const int screenWidth = 800;
-    const int screenHeight = 600;
+    const int screenHeight = 700;
 
     // Create a graph object
     lmm::Graph graph(screenWidth, screenHeight);

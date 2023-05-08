@@ -11,6 +11,33 @@ namespace lmm
         }
     }
 
+    void drawFunc(int screenWidth, int screenHeight, std::pair<Func, Color> funcs[], int numFuncs, int minX, int maxX, int minY, int maxY, float xRange, float yRange)
+    {
+        // Draw each function
+            for (int j = 0; j < numFuncs; j++) {
+                const float xScale = screenWidth / xRange;
+                const float yScale = screenHeight / yRange;
+                const int numPoints = screenWidth;
+                Vector2 points[numPoints];
+                for (int i = 0; i < numPoints; ++i) {
+                    const float x = static_cast<float>(i) / xScale + minX;
+                    const float y = funcs[j].first(x);
+                    points[i] = {(x - minX) * xScale, screenHeight - ((y - minY) * yScale)};
+                }
+                for (int i = 0; i < numPoints - 1; ++i) {
+                    DrawLineEx(points[i], points[i + 1], 2.0, funcs[j].second);
+                }
+            }
+    }
+
+    void drawPoints(int numSets, Vector2 points[][2])
+    {
+        // Draw each set of points
+        for (int j = 0; j < numSets; j++) {
+            DrawLineStrip(points[j], sizeof(points[j])/sizeof(points[j][0]), BLACK, 2.0);
+        }
+    }
+
     void Graph::Draw(std::pair<Func, Color> funcs[], int numFuncs, int minX, int maxX, int minY, int maxY) {
     // Initialize the window and the drawing buffer
     SetConfigFlags(FLAG_MSAA_4X_HINT); // Enable anti-aliasing
@@ -65,31 +92,28 @@ namespace lmm
     CloseWindow();
 }
 
-void Graph::drawFunc(int screenWidth, int screenHeight, std::pair<Func, Color> funcs[], int numFuncs, int minX, int maxX, int minY, int maxY, float xRange, float yRange)
-{
-    // Draw each function
-        for (int j = 0; j < numFuncs; j++) {
-            const float xScale = screenWidth / xRange;
-            const float yScale = screenHeight / yRange;
-            const int numPoints = screenWidth;
-            Vector2 points[numPoints];
-            for (int i = 0; i < numPoints; ++i) {
-                const float x = static_cast<float>(i) / xScale + minX;
-                const float y = funcs[j].first(x);
-                points[i] = {(x - minX) * xScale, screenHeight - ((y - minY) * yScale)};
-            }
-            for (int i = 0; i < numPoints - 1; ++i) {
-                DrawLineEx(points[i], points[i + 1], 2.0, funcs[j].second);
-            }
-        }
 }
 
-void Graph::drawPoints(int numSets, Vector2 points[][2])
-{
-    // Draw each set of points
-    for (int j = 0; j < numSets; j++) {
-        DrawLineStrip(points[j], sizeof(points[j])/sizeof(points[j][0]), BLACK, 2.0);
-    }
-}
+// std::string yLabel = "y-axis";
+//             for (int i = 0; i < yLabel.length(); i++) 
+//             {
+//                 DrawText(TextFormat("%c", yLabel[i]), 70, 270 + (i * 15), 15, BLACK);
+//             }
 
-}
+//             float x_pos = 120;
+//             float y_pos = 600;
+//             DrawLineEx({ x_pos, 140 }, { x_pos, y_pos }, 2, BLACK); // x-axis
+//             DrawLineEx({ x_pos, y_pos }, { 720, y_pos }, 2, BLACK); // y-axis
+
+//             // DrawLineEx({ 112, x_pos }, { x_pos, x_pos }, 2, RED);
+
+//             for (int i = 0; i < (450 / yRange) * 10; i += 6) 
+//             {
+//                 DrawLineEx({ 114, 90 + (float) i * 10}, { x_pos, 90 + (float) i * 10}, 2, BLACK);
+//                 DrawText(TextFormat("%d",(int) ((450 / yRange) * 10) - i), 100, 90 + (float) i * 10, 10, BLACK);
+//             }
+//             for (int i = (600 / xRange) * 10; i > 0; i -= 6) 
+//             {
+//                 DrawLineEx({ x_pos + (float) i * 10, y_pos }, { x_pos + (float) i * 10, 548 }, 2, BLACK);
+//                 DrawText(TextFormat("%d", i), x_pos + (float) i * 10, 550, 10, BLACK);
+//             }
