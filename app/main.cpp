@@ -10,14 +10,15 @@ int main() {
 
     // Create a graph object
     lmm::Graph graph(screenWidth, screenHeight);
-    typedef std::function<double(double)> Func;
 
     // Define the functions to draw
-    const int numFuncs = 2;
-    std::pair<Func, Color> funcs[numFuncs] = {{
+    const int numFuncs = 3;
+    std::pair<lmm::Func, Color> funcs[numFuncs] = {{
         [](float x) { return 0.5 * x + 10; }, BLUE
     }, {
         [](float x) { return -0.25 * x * x + 5; }, RED
+    }, {
+        [](float x) { return 5 * std::sin(M_PI* x); }, GREEN
     }};
 
     // Define the bounds of the graph

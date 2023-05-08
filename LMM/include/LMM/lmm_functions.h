@@ -17,9 +17,8 @@ namespace lmm
     double permutation(int n, int k);
     double combination(int n, int k);
     float binomial(int n, int k, float p);
-
-  
-
+    
+    
 }
 
 #endif // LMM_FUNCTIONS_H

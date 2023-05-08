@@ -58,6 +58,16 @@ namespace lmm
         DrawLineEx((Vector2){static_cast<float>(screenWidth / 2), 0}, (Vector2){static_cast<float>(screenWidth / 2), static_cast<float>(screenHeight)}, 1, BLACK);
 
         // Draw each function
+        drawFunc(screenWidth, screenHeight, funcs, numFuncs, minX, maxX, minY, maxY, xRange, yRange);
+        
+        EndDrawing();
+    }
+    CloseWindow();
+}
+
+void Graph::drawFunc(int screenWidth, int screenHeight, std::pair<Func, Color> funcs[], int numFuncs, int minX, int maxX, int minY, int maxY, float xRange, float yRange)
+{
+    // Draw each function
         for (int j = 0; j < numFuncs; j++) {
             const float xScale = screenWidth / xRange;
             const float yScale = screenHeight / yRange;
@@ -72,11 +82,14 @@ namespace lmm
                 DrawLineEx(points[i], points[i + 1], 2.0, funcs[j].second);
             }
         }
-
-        EndDrawing();
-    }
-    CloseWindow();
 }
 
+void Graph::drawPoints(int numSets, Vector2 points[][2])
+{
+    // Draw each set of points
+    for (int j = 0; j < numSets; j++) {
+        DrawLineStrip(points[j], sizeof(points[j])/sizeof(points[j][0]), BLACK, 2.0);
+    }
+}
 
 }

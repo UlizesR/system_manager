@@ -48,4 +48,6 @@ namespace lmm
         return combination(n, k) * pow(p, k) * pow(q, n - k);
     }
 
+    
+
 }
