@@ -28,8 +28,8 @@ target_include_directories(lmm
         ${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/LMM
 )
 
-# Add the app executable
-add_executable(app app/main.cpp)
+# Add the example executable
+add_executable(exm examples/main.cpp)
 
-# Link the app to the LMM library
-target_link_libraries(app lmm raylib)
+# Link the example to the LMM library
+target_link_libraries(exm lmm raylib)
