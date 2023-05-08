@@ -9,8 +9,8 @@ namespace lmm
     class Graph {
         public:
             Graph(int width, int height) : screenWidth(width), screenHeight(height) {}
-
-            void Draw(std::pair<Func, Color> funcs[], int numFuncs);
+            void Draw(std::pair<Func, Color> funcs[], int numFuncs, int minX, int maxX, int minY, int maxY);
+            // void Draw(std::pair<Func, Color> funcs[], int numFuncs, float minX, float maxX, float minY, float maxY);
 
         private:
             int screenWidth;
