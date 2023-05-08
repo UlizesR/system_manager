@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Find the installed raylib package
 find_package(raylib 3.0 REQUIRED)
 
-# Collect all .c and .m files in the LMM/src folder and its subdirectories, and all .h files in LMM/include
+# Collect all .c files in the LMM/src folder and its subdirectories
 file(GLOB_RECURSE LMM_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/LMM/src/*.cpp"
 )
@@ -26,6 +26,7 @@ target_include_directories(lmm
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/LMM>
     PRIVATE 
         ${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/LMM
+        ${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/physics
 )
 
 # Add the example executable
