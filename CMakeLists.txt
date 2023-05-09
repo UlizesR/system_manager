@@ -7,8 +7,6 @@ project(LMM LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Find the installed raylib package
-find_package(raylib 3.0 REQUIRED)
 
 # Collect all .c files in the LMM/src folder and its subdirectories
 file(GLOB_RECURSE LMM_SOURCES
@@ -24,14 +22,13 @@ target_include_directories(lmm
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/LMM/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/LMM>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/LMM/physics>
     PRIVATE 
         ${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/LMM
-        ${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/physics
-        ${CMAKE_CURRENT_SOURCE_DIR}/LMM/include/visuals
 )
 
 # Add the example executable
 add_executable(exm examples/main.cpp)
 
 # Link the example to the LMM library
-target_link_libraries(exm lmm raylib)
+target_link_libraries(exm lmm)
