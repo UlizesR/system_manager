@@ -1,21 +1,32 @@
-#ifndef GRAPH_H
-#define GRAPH_H
+#ifndef LMM_GRAPH_H
+#define LMM_GRAPH_H
 
-#include "raylib.h"
+#include "lmm_vectors.h"
 #include "lmm_functions.h"
+
+#include <QtCharts/QChart>
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QValueAxis>
+#include <QtCharts/QCategoryAxis>
+#include <QtCharts/QLegend>
+#include <QtCharts/QScatterSeries>
+#include <QtCore/QObject>
+#include <QtCore/QPair>
+#include <QtCore/QPointF>
+#include <QtGui/QPen>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QWidget>
+
 
 namespace lmm
 {
-    class Graph {
-        public:
-        
-            Graph(int width, int height) : screenWidth(width), screenHeight(height) {}
-            void Draw(std::pair<Func, Color> funcs[], int numFuncs, int minX, int maxX, int minY, int maxY);
-            
-        private:
-            int screenWidth;
-            int screenHeight;
-    };
+    typedef QVector<QPointF> DataPoints;
+    typedef std::list<std::pair<std::variant<Vec, Func, DataPoints>, QColor>> GraphDataList;
 
+    // Function declaration for creating a graph window
+    void createGraphWindow(const GraphDataList& dataList);
 }
-#endif // GRAPH_H
+
+#endif // LMM_GRAPH_H
