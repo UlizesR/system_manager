@@ -11,7 +11,7 @@
 namespace lmm
 {   
     
-    typedef QVector<float> Vec;
+    typedef std::vector<float> Vec;
     
     Vec vec_add(Vec a, Vec b);
     Vec vec_sub(Vec a, Vec b);

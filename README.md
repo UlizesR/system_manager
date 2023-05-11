@@ -1,10 +1,9 @@
 # LIB MATHEMATICA
 
----
 
-A simple c++ math library that allows calculations and the graphing and visualization of data
+A simple c++ math library that allows calculations and the graphing and visualization of data.
+Being built using C++ and Qt
 
----
 
 ## How to use
 
@@ -26,41 +25,17 @@ A simple c++ math library that allows calculations and the graphing and visualiz
 ## Features
 
 - Can calculate finite sums and products
+- Graphing Functionality
 - Can do Vector and Matrix Arithmetic
     - (vector, matrix) addition, subtraction, multiplication, scaliing
     - (matrix) rank, Dim, Col, Row, Null space, transpose, Inverse, Determinant
 
 
-## How to use
+## TODO -- Basic things to add or fix --
 
-### Examples
-
-Matrix and Vector Example
-```c++
-#include <LMM/LMM.h>
-
-int main()
-{
-    lmm::Mat A = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-    lmm::Mat B = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-
-    std::cout << "Matrix A: \n";
-    lmm::mat_print(A);
-    std::cout << "Matrix B: \n";
-    lmm::mat_print(B);
-
-    lmm::Vec v = {1, 2, 3};
-    std::cout << "Vector v: \n";
-    lmm::vec_print(v);
-
-    lmm::Mat C = {v, v, v};
-
-    std::cout << "Matrix C: \n";
-    lmm::mat_print(C);
-
-    std::cout << "Matrix A + B: \n";
-    lmm::mat_print(lmm::mat_add(A, B));
-
-    return 0;
-}
-```
+- Make it so that when a Vector is drawn it draws an arrow from the origin to the point made by the vector data
+- Add Integrals
+- Get more basic Mathematical Concepts coded in 
+- Add Algebra and Calculus 
+- Work more on Physics Equations
+- vore data visualization 

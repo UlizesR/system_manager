@@ -56,8 +56,7 @@ void createGraphWindow(const GraphDataList& dataList) {
 
             // Add data points to the series
             for (int i = 0; i < vecData.size(); ++i) {
-                series->append(QPointF(0, 0)); // Add origin point
-                series->append(QPointF(i, vecData[i])); // Add data point
+                series->append(QPointF(i, vecData[i]));
 
                 // Add arrowhead at the end of the vector
                 if (i == vecData.size() - 1) {
@@ -127,4 +126,3 @@ void createGraphWindow(const GraphDataList& dataList) {
 }
 
 } // namespace lmm
-
