@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <vector>
-#include <QtCore/QVector>
 
 #ifndef LMM_VECTORS_H
 #define LMM_VECTORS_H

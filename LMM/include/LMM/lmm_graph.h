@@ -3,21 +3,7 @@
 
 #include "lmm_vectors.h"
 #include "lmm_functions.h"
-
-#include <QtCharts/QChart>
-#include <QtCharts/QChartView>
-#include <QtCharts/QLineSeries>
-#include <QtCharts/QValueAxis>
-#include <QtCharts/QCategoryAxis>
-#include <QtCharts/QLegend>
-#include <QtCharts/QScatterSeries>
-#include <QtCore/QObject>
-#include <QtCore/QPair>
-#include <QtCore/QPointF>
-#include <QtGui/QPen>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QWidget>
+#include "lmm_qt.h"
 
 
 namespace lmm
