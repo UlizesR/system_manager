@@ -1,69 +1,200 @@
 #include "lmm_vectors.h"
 #include "lmm_errors.h"
 #include <cmath>
-#include <iostream>
-#include <iomanip>
 
-namespace lmm {
-    Vec vec_add(const Vec& a, const Vec& b)
+namespace lmm
+{
+
+    Vector::Vector(const QVector<float>& tail, const QVector<float>& head)
     {
-        if (a.size() != b.size()) throw std::invalid_argument(LMM_VECTOR_DIMENSION_ERROR);
-        Vec c(a.size());
-        for (int i = 0; i < a.size(); i++) c[i] = a[i] + b[i];
-        return c;
+        if (tail.size() != head.size())
+        {
+            throw std::logic_error(LMM_VECTOR_DIMENSION_ERROR);
+        }
+
+        data.reserve(tail.size());
+        for (size_t i = 0; i < tail.size(); ++i)
+        {
+            data.emplace_back(head[i] - tail[i]);
+        }
     }
 
-    Vec vec_sub(const Vec& a, const Vec& b)
+    // Vector properties
+    float Vector::length() const
     {
-        if (a.size() != b.size()) throw std::invalid_argument(LMM_VECTOR_DIMENSION_ERROR);
-        Vec c(a.size());
-        for (int i = 0; i < a.size(); i++) c[i] = a[i] - b[i];
-        return c;
+        float sumOfSquares = 0.0f;
+        for (const auto& value : data) sumOfSquares += value * value;
+        return std::sqrt(sumOfSquares);
     }
 
-    float vec_dot(const Vec& a, const Vec& b)
+    float Vector::normalize() const
     {
-        if (a.size() != b.size()) throw std::invalid_argument(LMM_VECTOR_DIMENSION_ERROR);
-        float c = 0;
-        for (int i = 0; i < a.size(); i++) c += a[i] * b[i];
-        return c;
+        float vecLength = length();
+        if (vecLength == 0.0f)
+        {
+            throw std::logic_error("Normalization of zero vector");
+        }
+        return 1 / vecLength;
     }
 
-    Vec vec_cross(const Vec& a, const Vec& b)
+
+    float Vector::dot(const Vector& vec) const
     {
-        if (a.size() != 3 || b.size() != 3) throw std::invalid_argument(LMM_CROSS_PRODUCT_ERROR);
-        Vec c(3);
-        c[0] = a[1] * b[2] - a[2] * b[1];
-        c[1] = a[2] * b[0] - a[0] * b[2];
-        c[2] = a[0] * b[1] - a[1] * b[0];
-        return c;
+        if (data.size() != vec.data.size())
+        {
+            throw std::logic_error(LMM_VECTOR_DIMENSION_ERROR);
+        }
+        float dotProduct = 0.0f;
+        for (size_t i = 0; i < data.size(); ++i)
+        {
+            dotProduct += data[i] * vec.data[i];
+        }
+        return dotProduct;
     }
 
-    Vec vec_scale(const Vec& a, float s)
+    Vector Vector::cross(const Vector& vec) const
     {
-        Vec c(a.size());
-        for (int i = 0; i < a.size(); i++) c[i] = a[i] * s;
-        return c;
+        if (data.size() != 3 || vec.data.size() != 3)
+        {
+            throw std::logic_error(LMM_CROSS_PRODUCT_ERROR);
+        }
+        const float x1 = data[0];
+        const float y1 = data[1];
+        const float z1 = data[2];
+        const float x2 = vec.data[0];
+        const float y2 = vec.data[1];
+        const float z2 = vec.data[2];
+        return Vector({ y1 * z2 - z1 * y2, z1 * x2 - x1 * z2, x1 * y2 - y1 * x2 });
     }
 
-    float vec_length(const Vec& a)
+    float Vector::angle() const
     {
-        float length = 0;
-        for (int i = 0; i < a.size(); i++) length += a[i] * a[i];
-        return sqrt(length);
+        const float x = data[0];
+        const float y = data[1];
+        return std::atan2(y, x);
     }
 
-    Vec vec_normalize(const Vec& a)
+    float Vector::angle(const Vector& vec) const
     {
-        float length = vec_length(a);
-        Vec c(a.size());
-        for (int i = 0; i < a.size(); i++) c[i] = a[i] / length;
-        return c;
+        const float dotProduct = dot(vec);
+        const float thisLength = length();
+        const float vecLength = vec.length();
+        if (thisLength == 0.0f || vecLength == 0.0f)
+        {
+            throw std::logic_error(LMM_ZERO_VECTOR_ERROR);
+        }
+        return std::acos(dotProduct / (thisLength * vecLength));
     }
 
-    void vec_print(const Vec& a)
+    Vector Vector::projection(const Vector& vec) const
     {
-        for (int i = 0; i < a.size(); i++) std::cout << "| " << a[i] << " |\n";
+        if (data.size() != vec.data.size())
+        {
+            throw std::logic_error(LMM_VECTOR_DIMENSION_ERROR);
+        }
+        const float dotProduct = dot(vec);
+        const float vecLengthSquared = vec.length() * vec.length();
+        if (vecLengthSquared == 0.0f)
+        {
+            throw std::logic_error(LMM_ZERO_VECTOR_ERROR);
+        }
+        const float scalar = dotProduct / vecLengthSquared;
+        return vec * scalar;
+    }
+
+    void Vector::print() const
+    {
+        for (const auto& value : data)
+        {
+            std::cout << "| " << value << " |";
+        }
         std::cout << std::endl;
     }
-}
+
+    // Operator overloading
+    // Element access
+    float& Vector::operator[](int index)
+    {
+        if (index < 0 || static_cast<size_t>(index) >= data.size())
+        {
+            throw std::out_of_range(LMM_OUT_OF_BOUNDS_ERROR);
+        }
+        return data[index];
+    }
+
+    const float& Vector::operator[](int index) const
+    {
+        if (index < 0 || static_cast<size_t>(index) >= data.size())
+        {
+            throw std::out_of_range(LMM_OUT_OF_BOUNDS_ERROR);
+        }
+        return data[index];
+    }
+
+    // Vector operations
+    Vector Vector::operator+(const Vector& vec) const
+    {
+        if (data.size() != vec.data.size())
+        {
+            throw std::logic_error(LMM_VECTOR_DIMENSION_ERROR);
+        }
+        Vector result(*this);
+        for (size_t i = 0; i < data.size(); ++i)
+        {
+            result.data[i] += vec.data[i];
+        }
+        return result;
+    }
+
+    Vector Vector::operator-(const Vector& vec) const
+    {
+        if (data.size() != vec.data.size())
+        {
+            throw std::logic_error(LMM_VECTOR_DIMENSION_ERROR);
+        }
+        Vector result(*this);
+        for (size_t i = 0; i < data.size(); ++i)
+        {
+            result.data[i] -= vec.data[i];
+        }
+        return result;
+    }
+
+    Vector Vector::operator*(float scalar) const
+    {
+        Vector result(*this);
+        for (auto& value : result.data)
+        {
+            value *= scalar;
+        }
+        return result;
+    }
+
+    Vector Vector::operator/(float scalar) const
+    {
+        if (scalar == 0.0f)
+        {
+            throw std::logic_error(LMM_ZERO_VECTOR_ERROR);
+        }
+        Vector result(*this);
+        for (auto& value : result.data)
+        {
+            value /= scalar;
+        }
+        return result;
+    }
+
+    float Vector::operator*(const Vector& vec) const
+    {
+        if (data.size() != vec.data.size())
+        {
+            throw std::logic_error(LMM_VECTOR_DIMENSION_ERROR);
+        }
+        float dotProduct = 0.0f;
+        for (size_t i = 0; i < data.size(); ++i)
+        {
+            dotProduct += data[i] * vec.data[i];
+        }
+        return dotProduct;
+    }
+} // namespace lmm
