@@ -3,26 +3,41 @@
 #include <LMM/LMM.h>
 #include <cmath>
 
-int main(int argc, char *argv[]) {
-    // Create a list of graph data
-    lmm::GraphDataList dataList;
+int main()
+{
+    // Create vectors
+    lmm::Vector vec1({1.0f, 2.0f, 3.0f});
+    lmm::Vector vec2({4.0f, 5.0f, 6.0f});
 
-    // Create a Vec data (vector)
-    lmm::Vec vecData = {1.2, 2.5, 3.8, 2.0, 4.2};
-    dataList.push_back({vecData, LMM_MAGENTA});
+    // Perform vector operations
+    lmm::Vector vecSum = vec1 + vec2;
+    lmm::Vector vecSub = vec1 - vec2;
+    float dotProduct = vec1 * vec2;
 
-    // Create a function data
-    lmm::Func funcData = [](double x) { return x * x; };
-    dataList.push_back({funcData, LMM_BLUE});
+    // Print vector results
+    std::cout << "Vector Sum:" << std::endl;
+    vecSum.print();
+    std::cout << "Vector Subtraction:" << std::endl;
+    vecSub.print();
+    std::cout << "Dot Product:" << dotProduct << std::endl;
 
-    lmm::Func funcData2 = [](double x) { return std::sin(x); };
+    // Create matrices
+    // Create matrices with matching dimensions
+    std::vector<lmm::Vector> matrixData1 = {lmm::Vector({1.0f, 2.0f}), lmm::Vector({3.0f, 4.0f})};
+    std::vector<lmm::Vector> matrixData2 = {lmm::Vector({5.0f, 6.0f}), lmm::Vector({7.0f, 8.0f})};
 
-    // Create a points data
-    lmm::DataPoints pointsData = {{1.0, 1.0}, {2.0, 4.0}, {3.0, 9.0}, {4.0, 16.0}};
-    dataList.push_back({pointsData, LMM_GREEN});
+    lmm::Matrix mat1(matrixData1);
+    lmm::Matrix mat2(matrixData2);
 
-    // Create the graph window
-    lmm::createGraphWindow(dataList);
+    // Perform matrix operations
+    lmm::Matrix matSum = mat1 + mat2;
+    lmm::Matrix matSub = mat1 - mat2;
+
+    // Print matrix results
+    std::cout << "Matrix Sum:" << std::endl;
+    matSum.print();
+    std::cout << "Matrix Subtraction:" << std::endl;
+    matSub.print();
 
     return 0;
 }

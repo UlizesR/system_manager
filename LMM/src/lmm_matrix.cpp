@@ -1,332 +1,162 @@
 #include "lmm_matrix.h"
 #include "lmm_errors.h"
-#include <thread>
-#include <iostream>
-#include <iomanip>
- 
+
 namespace lmm
 {
-    Mat mat_add(Mat a, Mat b)
+    Matrix::Matrix() : data_() {}
+
+    Matrix Matrix::transpose() const
     {
-        if (a.size() != b.size()) throw std::invalid_argument(LMM_MATRIX_DIMENSION_ERROR);
-        Mat c;
-        for (int i = 0; i < a.size(); i++) c.push_back(vec_add(a[i], b[i]));
-        return c;
-    }
+        const size_t numRows = data_.size();
+        const size_t numCols = cols();
 
-    Mat mat_sub(Mat a, Mat b)
-    {
-        if (a.size() != b.size()) throw std::invalid_argument(LMM_MATRIX_DIMENSION_ERROR);
-        Mat c;
-        for (int i = 0; i < a.size(); i++) c.push_back(vec_sub(a[i], b[i]));
-        return c;
-    }
+        Matrix result;
+        result.data_.resize(numCols, Vector(numRows));
 
-    Mat mat_scale(Mat a, float s)
-    {
-        Mat c;
-        for (int i = 0; i < a.size(); i++) c.push_back(vec_scale(a[i], s));
-        return c;
-    }
-
-    template <typename T>
-    void swap(T& a, T& b)
-    {
-        T temp = a;
-        a = b;
-        b = temp;
-    }
-
-    Mat mat_mul(Mat a, Mat b)
-    {
-        int a_rows = a.size();
-        int a_cols = 0;
-        if (a_rows > 0) {
-            a_cols = a[0].size();
-        } else {
-            throw std::invalid_argument(LMM_OUT_OF_BOUNDS_ERROR);
-        }
-        int b_rows = b.size();
-        int b_cols = 0;
-        if (b_rows > 0) {
-            b_cols = b[0].size();
-        } else {
-            throw std::invalid_argument(LMM_OUT_OF_BOUNDS_ERROR);
-        }
-
-        if (a_cols != b_rows) {
-            // Dimensions are incompatible, transpose b
-            b = mat_transpose(b);
-            swap(b_rows, b_cols);
-        }
-
-        Mat c(a_rows, Vec(b_cols));
-
-        int num_threads = std::thread::hardware_concurrency();
-        std::vector<std::thread> threads(num_threads);
-        int chunk_size = a_rows / num_threads;
-        int remainder = a_rows % num_threads;
-        int start = 0;
-        for (int i = 0; i < num_threads; i++) {
-            int end = start + chunk_size;
-            if (i < remainder) {
-                end++;
-            }
-            threads[i] = std::thread([&a, &b, &c, a_cols, b_cols](int start, int end) {
-                for (int i = start; i < end; i++) {
-                    for (int j = 0; j < b_cols; j++) {
-                        float sum = 0.0f;
-                        for (int k = 0; k < a_cols; k++) {
-                            sum += a[i][k] * b[k][j];
-                        }
-                        c[i][j] = sum;
-                    }
-                }
-            }, start, end);
-            start = end;
-        }
-        for (auto& thread : threads) {
-            thread.join();
-        }
-
-        return c;
-    }
-
-    Mat mat_transpose(Mat a)
-    {
-        int rows = a.size();
-        int cols = 0;
-        if (rows > 0) {
-            cols = a[0].size();
-        } else {
-            return a;
-        }
-
-        Mat result(cols, Vec(rows));
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                result[j][i] = a[i][j];
+        for (size_t i = 0; i < numRows; ++i)
+        {
+            for (size_t j = 0; j < numCols; ++j)
+            {
+                result.data_[j][i] = data_[i][j];
             }
         }
+
         return result;
     }
 
-
-    Mat mat_identity(int n)
+    Matrix Matrix::operator+(const Matrix& other) const
     {
-        Mat result(n, Vec(n));
-        for (int i = 0; i < n; i++) {
-            result[i][i] = 1;
+        const size_t numRows = data_.size();
+        const size_t numCols = cols();
+
+        if (numRows != other.data_.size() || numCols != other.cols())
+        {
+            throw std::logic_error(LMM_MATRIX_DIMENSION_ERROR);
         }
+
+        Matrix result;
+        result.data_.resize(numRows, Vector(numCols));
+
+        for (size_t i = 0; i < numRows; ++i)
+        {
+            for (size_t j = 0; j < numCols; ++j)
+            {
+                result.data_[i][j] = data_[i][j] + other.data_[i][j];
+            }
+        }
+
         return result;
     }
 
-    Mat mat_inverse(Mat a)
+    Matrix Matrix::operator-(const Matrix& other) const
     {
-        int n = a.size();
-        if (n == 0) {
-            return a;
-        }
-        int m = a[0].size();
-        if (n != m) {
-            throw std::invalid_argument(LMM_MATRIX_DIMENSION_ERROR);
+        const size_t numRows = data_.size();
+        const size_t numCols = cols();
+
+        if (numRows != other.data_.size() || numCols != other.cols())
+        {
+            throw std::logic_error(LMM_MATRIX_DIMENSION_ERROR);
         }
 
-        // Create an identity matrix
-        Mat I = mat_identity(n);
+        Matrix result;
+        result.data_.resize(numRows, Vector(numCols));
 
-        // Perform LU decomposition with partial pivoting
-        for (int k = 0; k < n; k++) {
-            int p = k;
-            for (int i = k + 1; i < n; i++) {
-                if (fabs(a[i][k]) > fabs(a[p][k])) {
-                    p = i;
+        for (size_t i = 0; i < numRows; ++i)
+        {
+            for (size_t j = 0; j < numCols; ++j)
+            {
+                result.data_[i][j] = data_[i][j] - other.data_[i][j];
+            }
+        }
+
+        return result;
+    }
+
+    Matrix Matrix::operator*(float scalar) const
+    {
+        const size_t numRows = data_.size();
+        const size_t numCols = cols();
+
+        Matrix result;
+        result.data_.resize(numRows, Vector(numCols));
+
+        for (size_t i = 0; i < numRows; ++i)
+        {
+            for (size_t j = 0; j < numCols; ++j)
+            {
+                result.data_[i][j] = data_[i][j] * scalar;
+            }
+        }
+
+        return result;
+    }
+
+    Matrix Matrix::operator*(const Matrix& other) const
+    {
+        const size_t numRowsA = data_.size();
+        const size_t numColsA = cols();
+        const size_t numRowsB = other.data_.size();
+        const size_t numColsB = other.cols();
+
+        if (numColsA != numRowsB)
+        {
+            throw std::logic_error(LMM_MATRIX_MULTIPLICATION_ERROR);
+        }
+
+        Matrix result;
+        result.data_.resize(numRowsA, Vector(numColsB));
+
+        for (size_t i = 0; i < numRowsA; ++i)
+        {
+            for (size_t j = 0; j < numColsB; ++j)
+            {
+                float sum = 0.0f;
+                for (size_t k = 0; k < numColsA; ++k)
+                {
+                    sum += data_[i][k] * other.data_[k][j];
                 }
-            }
-            if (p != k) {
-                swap(a[k], a[p]);
-                swap(I[k], I[p]);
-            }
-            if (fabs(a[k][k]) < 1e-10) {
-                throw std::invalid_argument(LMM_MATRIX_SINGULAR_ERROR);
-            }
-            for (int i = k + 1; i < n; i++) {
-                float factor = a[i][k] / a[k][k];
-                for (int j = k + 1; j < n; j++) {
-                    a[i][j] -= factor * a[k][j];
-                }
-                for (int j = 0; j < n; j++) {
-                    I[i][j] -= factor * I[k][j];
-                }
-                a[i][k] = factor;
+                result.data_[i][j] = sum;
             }
         }
 
-        // Solve for inverse using back substitution
-        for (int k = n - 1; k >= 0; k--) {
-            for (int j = 0; j < n; j++) {
-                for (int i = k + 1; i < n; i++) {
-                    I[k][j] -= a[k][i] * I[i][j];
-                }
-                I[k][j] /= a[k][k];
-            }
-        }
-
-        return I;
+        return result;
     }
 
-    float mat_determinant(Mat a)
+    Vector Matrix::operator*(const Vector& vec) const
     {
-        int n = a.size();
-        int sign = 1;
-        float det = 1;
+        const size_t numRows = data_.size();
+        const size_t numCols = cols();
 
-        // Perform LU decomposition with partial pivoting
-        for (int k = 0; k < n; k++) {
-            int p = k;
-            for (int i = k + 1; i < n; i++) {
-                if (fabs(a[i][k]) > fabs(a[p][k])) {
-                    p = i;
-                }
-            }
-            if (p != k) {
-                swap(a[k], a[p]);
-                sign *= -1;
-            }
-            if (fabs(a[k][k]) < 1e-10) {
-                return 0;
-            }
-            det *= a[k][k];
-            for (int i = k + 1; i < n; i++) {
-                float factor = a[i][k] / a[k][k];
-                for (int j = k + 1; j < n; j++) {
-                    a[i][j] -= factor * a[k][j];
-                }
-                a[i][k] = factor;
-            }
+        if (numCols != vec.length())
+        {
+            throw std::logic_error(LMM_MATRIX_VECTOR_MULTIPLICATION_ERROR);
         }
 
-        return det * sign;
+        Vector result(numRows);
+
+        for (size_t i = 0; i < numRows; ++i)
+        {
+            float sum = 0.0f;
+            for (size_t j = 0; j < numCols; ++j)
+            {
+                sum += data_[i][j] * vec[j];
+            }
+            result[i] = sum;
+        }
+
+        return result;
     }
 
-    Mat mat_rref(Mat a)
+    void Matrix::print() const
     {
-        int lead = 0;
-        int rowCount = a.size();
-        int columnCount = a[0].size();
-        for (int r = 0; r < rowCount; r++) {
-            if (columnCount <= lead) {
-                break;
+        for (size_t i = 0; i < data_.size(); ++i)
+        {
+            for (size_t j = 0; j < data_[i].length(); ++j)
+            {
+                std::cout << data_[i][j] << " ";
             }
-            int i = r;
-            while (i < rowCount && a[i][lead] == 0) {
-                i++;
-            }
-            if (i == rowCount) {
-                i = r;
-                lead++;
-                continue;
-            }
-            swap(a[i], a[r]);
-            double val = a[r][lead];
-            for (int j = 0; j < columnCount; j++) {
-                a[r][j] /= val;
-            }
-            for (int j = 0; j < rowCount; j++) {
-                if (j != r) {
-                    double val = a[j][lead];
-                    for (int k = 0; k < columnCount; k++) {
-                        a[j][k] -= val * a[r][k];
-                    }
-                }
-            }
-            lead++;
-        }
-        return a;
-    }
-
-    int mat_rank(Mat a)
-    {
-        Mat rref = mat_rref(a);
-        int rank = 0;
-        for (int i = 0; i < rref.size(); i++) {
-            if (*std::max_element(rref[i].begin(), rref[i].end()) != 0) {
-                rank++;
-            }
-        }
-        return rank;
-    }
-
-    int mat_dim(Mat a)
-    {
-        int rowCount = a.size();
-        int columnCount = a[0].size();
-        Mat rref = mat_rref(a);
-        int rank = 0;
-        for (int i = 0; i < rref.size(); i++) {
-            if (*std::max_element(rref[i].begin(), rref[i].end()) != 0) {
-                rank++;
-            }
-        }
-        int nullity = columnCount - rank;
-        return nullity;
-    }
-
-    Vec mat_null(Mat a) {
-        int nullity = mat_dim(a);
-        Vec nullVec(nullity, 0);
-        int columnCount = a[0].size();
-        Mat rref = mat_rref(a);
-        for (int i = 0, j = 0; i < columnCount && j < nullity; i++) {
-            if (std::find(rref[j].begin(), rref[j].end(), 1) == rref[j].end()) {
-                nullVec[j++] = 1;
-            }
-            else {
-                j++;
-            }
-        }
-        return nullVec;
-    }
-
-
-    Mat mat_col(Mat a)
-    {
-        int rowCount = a.size();
-        int columnCount = a[0].size();
-        Mat rref = mat_rref(a);
-        Mat colSpace(columnCount);
-        for (int i = 0, j = 0; i < columnCount && j < rowCount; i++) {
-            if (std::find(rref[j].begin(), rref[j].end(), 1) != rref[j].end()) {
-                colSpace[i] = a[j++];
-            }
-            else {
-                colSpace[i] = Vec(rowCount, 0);
-            }
-        }
-        return colSpace;
-    }
-
-    Mat mat_row(Mat a)
-    {
-        Mat rref = mat_rref(a);
-        Mat rowSpace;
-        for (int i = 0; i < rref.size(); i++) {
-            if (*std::max_element(rref[i].begin(), rref[i].end()) != 0) {
-                rowSpace.push_back(rref[i]);
-            }
-        }
-        return rowSpace;
-    }
-
-    void mat_print(Mat a)
-    {
-        for (int i = 0; i < a.size(); i++) {
-            std::cout << "| ";
-            for (int j = 0; j < a[i].size(); j++) {
-                std::cout << std::setw(a.size()) << a[i][j] << " ";    
-            }
-            std::cout << " |"<< std::endl;
+            std::cout << std::endl;
         }
     }
 
-}
+} // namespace lmm

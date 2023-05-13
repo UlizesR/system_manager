@@ -106,7 +106,7 @@ namespace lmm
     {
         for (const auto& value : data)
         {
-            std::cout << "| " << value << " |";
+            std::cout << "| " << value << " |\n";
         }
         std::cout << std::endl;
     }

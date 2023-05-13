@@ -1,33 +1,51 @@
-#pragma once 
+#pragma once
 
 #ifndef LMM_MATRIX_H
 #define LMM_MATRIX_H
 
 #include "lmm_vectors.h"
 
-namespace lmm 
+namespace lmm
 {
-    typedef std::vector<Vec> Mat;
+    class Matrix
+    {
+    public:
+        Matrix();                                            // initializes a matrix of size 0
+        Matrix(const std::vector<Vector>& data) : data_(data) {} // initializes a matrix
 
-    Mat mat_add(Mat a, Mat b);
-    Mat mat_sub(Mat a, Mat b);
-    Mat mat_scale(Mat a, float s);
-    Mat mat_mul(Mat a, Mat b);
-    Vec mat_vec_mul(Mat a, Vec b);
-    Mat mat_transpose(Mat a);
-    Mat mat_inverse(Mat a);
-    float mat_determinant(Mat a);
-    Mat mat_identity(int n);
+        // Matrix properties
+        size_t rows() const { return data_.size(); }                              // returns the number of rows in the matrix
+        size_t cols() const { return (data_.empty() ? 0 : data_[0].length()); }   // returns the number of columns in the matrix
+        bool isSquare() const { return (rows() == cols()); }                    
 
-    Mat mat_rref(Mat a);
+        // Matrix operations
+        Matrix rref() const;                                // reduced row echelon form
+        Matrix transpose() const;                           // transpose of the matrix
+        Matrix inverse() const;                             // inverse of the matrix
+        float determinant() const;                          // determinant of the matrix
+        size_t rank() const;                                // rank of the matrix
+        size_t dim() const;                                 // dimension of the matrix
+        Vector nullSpace() const;                           // null space of the matrix
+        Matrix columnSpace() const;                         // column space of the matrix
+        Matrix rowSpace() const;                            // row space of the matrix
 
-    int mat_rank(Mat a);
-    int mat_dim(Mat a);
-    Vec mat_null(Mat a);
-    Mat mat_col(Mat a);
-    Mat mat_row(Mat a);
+        // Matrix element access
+        Vector& operator[](size_t index);                   // returns a reference to the row at the specified index
+        const Vector& operator[](size_t index) const;       // returns a const reference to the row at the specified index
 
-    void mat_print(Mat a);
-}
+        // Matrix operations
+        Matrix operator+(const Matrix& other) const;        // matrix addition
+        Matrix operator-(const Matrix& other) const;        // matrix subtraction
+        Matrix operator*(float scalar) const;               // scalar multiplication
+        Matrix operator*(const Matrix& other) const;        // matrix multiplication
+        Vector operator*(const Vector& vec) const;          // matrix-vector multiplication
+
+        // Matrix printing
+        void print() const;
+
+    private:
+        std::vector<Vector> data_;
+    };
+} // namespace lmm
 
 #endif // LMM_MATRIX_H
