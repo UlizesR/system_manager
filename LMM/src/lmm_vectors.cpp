@@ -5,65 +5,65 @@
 #include <iomanip>
 
 namespace lmm {
-    Vec vec_add(Vec a, Vec b)
+    Vec vec_add(const Vec& a, const Vec& b)
     {
         if (a.size() != b.size()) throw std::invalid_argument(LMM_VECTOR_DIMENSION_ERROR);
-        Vec c;
-        for (int i = 0; i < a.size(); i++) c.push_back(a[i] + b[i]);
+        Vec c(a.size());
+        for (int i = 0; i < a.size(); i++) c[i] = a[i] + b[i];
         return c;
     }
 
-    Vec vec_sub(Vec a, Vec b)
+    Vec vec_sub(const Vec& a, const Vec& b)
     {
         if (a.size() != b.size()) throw std::invalid_argument(LMM_VECTOR_DIMENSION_ERROR);
-        Vec c;
-        for (int i = 0; i < a.size(); i++) c.push_back(a[i] - b[i]);
+        Vec c(a.size());
+        for (int i = 0; i < a.size(); i++) c[i] = a[i] - b[i];
         return c;
     }
 
-    float vec_dot(Vec a, Vec b)
-    {   
+    float vec_dot(const Vec& a, const Vec& b)
+    {
         if (a.size() != b.size()) throw std::invalid_argument(LMM_VECTOR_DIMENSION_ERROR);
         float c = 0;
         for (int i = 0; i < a.size(); i++) c += a[i] * b[i];
         return c;
     }
 
-    Vec vec_cross(Vec a, Vec b)
+    Vec vec_cross(const Vec& a, const Vec& b)
     {
         if (a.size() != 3 || b.size() != 3) throw std::invalid_argument(LMM_CROSS_PRODUCT_ERROR);
-        Vec c;
-        c.push_back(a[1] * b[2] - a[2] * b[1]);
-        c.push_back(a[2] * b[0] - a[0] * b[2]);
-        c.push_back(a[0] * b[1] - a[1] * b[0]);
+        Vec c(3);
+        c[0] = a[1] * b[2] - a[2] * b[1];
+        c[1] = a[2] * b[0] - a[0] * b[2];
+        c[2] = a[0] * b[1] - a[1] * b[0];
         return c;
     }
 
-    Vec vec_scale(Vec a, float s)
+    Vec vec_scale(const Vec& a, float s)
     {
-        Vec c;
-        for (int i = 0; i < a.size(); i++) c.push_back(a[i] * s);
+        Vec c(a.size());
+        for (int i = 0; i < a.size(); i++) c[i] = a[i] * s;
         return c;
     }
 
-    float vec_length(Vec a)
+    float vec_length(const Vec& a)
     {
         float length = 0;
         for (int i = 0; i < a.size(); i++) length += a[i] * a[i];
         return sqrt(length);
     }
 
-    Vec vec_normalize(Vec a)
+    Vec vec_normalize(const Vec& a)
     {
         float length = vec_length(a);
-        Vec c;
-        for (int i = 0; i < a.size(); i++) c.push_back(a[i] / length);
+        Vec c(a.size());
+        for (int i = 0; i < a.size(); i++) c[i] = a[i] / length;
         return c;
     }
 
-    void vec_print(Vec a)
+    void vec_print(const Vec& a)
     {
-        for (int i = 0; i < a.size(); i++) std::cout << "| " << a[i] << " |\n"; 
+        for (int i = 0; i < a.size(); i++) std::cout << "| " << a[i] << " |\n";
         std::cout << std::endl;
     }
 }

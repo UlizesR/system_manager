@@ -38,4 +38,4 @@ Being built using C++ and Qt
 - Get more basic Mathematical Concepts coded in 
 - Add Algebra and Calculus 
 - Work more on Physics Equations
-- vore data visualization 
+- more data visualization 

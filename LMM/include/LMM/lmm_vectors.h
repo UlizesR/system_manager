@@ -6,21 +6,23 @@
 #ifndef LMM_VECTORS_H
 #define LMM_VECTORS_H
 
+#include "lmm_qt.h"
 
 namespace lmm
 {   
     
-    typedef std::vector<float> Vec;
-    
-    Vec vec_add(Vec a, Vec b);
-    Vec vec_sub(Vec a, Vec b);
-    float vec_dot(Vec a, Vec b);
-    Vec vec_cross(Vec a, Vec b);
-    Vec vec_scale(Vec a, float s);
-    float vec_length(Vec a);
-    Vec vec_normalize(Vec a);
-    
-    void vec_print(Vec a);
+    typedef QVector<float> Vec;
+
+    Vec vec_add(const Vec& a, const Vec& b);
+    Vec vec_sub(const Vec& a, const Vec& b);
+    float vec_dot(const Vec& a, const Vec& b);
+    Vec vec_cross(const Vec& a, const Vec& b);
+    Vec vec_scale(const Vec& a, float s);
+    float vec_length(const Vec& a);
+    Vec vec_normalize(const Vec& a);
+
+    void vec_print(const Vec& a);
+
 
 } // namespace lmm
 

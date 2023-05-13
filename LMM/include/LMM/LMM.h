@@ -10,7 +10,8 @@
 #include "lmm_functions.h"
 #include "lmm_errors.h"
 #include "lmm_graph.h"
-
+#include "lmm_colors.h"
+#include "physics/lmm_kinematics.h"
 
 
 #endif // LMM_H
