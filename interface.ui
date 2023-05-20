@@ -99,7 +99,7 @@ border: none
             </property>
             <property name="icon">
              <iconset resource="icons.qrc">
-              <normaloff>:/icons/icons/menu.svg</normaloff>:/icons/icons/menu.svg</iconset>
+              <normaloff>:/icons/menu.svg</normaloff>:/icons/menu.svg</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -132,7 +132,7 @@ border: none
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap resource="icons.qrc">:/icons/icons/monitor.svg</pixmap>
+             <pixmap resource="icons.qrc">:/icons/monitor.svg</pixmap>
             </property>
            </widget>
           </item>
@@ -145,7 +145,7 @@ border: none
              </font>
             </property>
             <property name="text">
-             <string>URSys Monitor Manager</string>
+             <string>UR-Task Manager</string>
             </property>
            </widget>
           </item>
@@ -182,8 +182,8 @@ border: none
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="icons.qrc">
-              <normaloff>:/icons/icons/minus.svg</normaloff>:/icons/icons/minus.svg</iconset>
+             <iconset>
+              <normaloff>:minus.svg</normaloff>:minus.svg</iconset>
             </property>
            </widget>
           </item>
@@ -193,8 +193,8 @@ border: none
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="icons.qrc">
-              <normaloff>:/icons/icons/minimize.svg</normaloff>:/icons/icons/minimize.svg</iconset>
+             <iconset>
+              <normaloff>:minimize.svg</normaloff>:minimize.svg</iconset>
             </property>
            </widget>
           </item>
@@ -204,8 +204,8 @@ border: none
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="icons.qrc">
-              <normaloff>:/icons/icons/x.svg</normaloff>:/icons/icons/x.svg</iconset>
+             <iconset>
+              <normaloff>:x.svg</normaloff>:x.svg</iconset>
             </property>
            </widget>
           </item>
@@ -312,7 +312,7 @@ border: none
                </property>
                <property name="icon">
                 <iconset resource="icons.qrc">
-                 <normaloff>:/icons/icons/wifi.svg</normaloff>:/icons/icons/wifi.svg</iconset>
+                 <normaloff>:/icons/wifi.svg</normaloff>:/icons/wifi.svg</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -335,7 +335,7 @@ border: none
                </property>
                <property name="icon">
                 <iconset resource="icons.qrc">
-                 <normaloff>:/icons/icons/cpu.svg</normaloff>:/icons/icons/cpu.svg</iconset>
+                 <normaloff>:/icons/cpu.svg</normaloff>:/icons/cpu.svg</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -352,7 +352,7 @@ border: none
                </property>
                <property name="icon">
                 <iconset resource="icons.qrc">
-                 <normaloff>:/icons/icons/thermometer.svg</normaloff>:/icons/icons/thermometer.svg</iconset>
+                 <normaloff>:/icons/thermometer.svg</normaloff>:/icons/thermometer.svg</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -369,7 +369,7 @@ border: none
                </property>
                <property name="icon">
                 <iconset resource="icons.qrc">
-                 <normaloff>:/icons/icons/activity.svg</normaloff>:/icons/icons/activity.svg</iconset>
+                 <normaloff>:/icons/activity.svg</normaloff>:/icons/activity.svg</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -386,7 +386,7 @@ border: none
                </property>
                <property name="icon">
                 <iconset resource="icons.qrc">
-                 <normaloff>:/icons/icons/hard-drive.svg</normaloff>:/icons/icons/hard-drive.svg</iconset>
+                 <normaloff>:/icons/airplay.svg</normaloff>:/icons/airplay.svg</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -403,7 +403,7 @@ border: none
                </property>
                <property name="icon">
                 <iconset resource="icons.qrc">
-                 <normaloff>:/icons/icons/battery-charging.svg</normaloff>:/icons/icons/battery-charging.svg</iconset>
+                 <normaloff>:/icons/battery-charging.svg</normaloff>:/icons/battery-charging.svg</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -420,7 +420,7 @@ border: none
                </property>
                <property name="icon">
                 <iconset resource="icons.qrc">
-                 <normaloff>:/icons/icons/disc.svg</normaloff>:/icons/icons/disc.svg</iconset>
+                 <normaloff>:/icons/disc.svg</normaloff>:/icons/disc.svg</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -997,8 +997,8 @@ border: none
                        <string/>
                       </property>
                       <property name="icon">
-                       <iconset resource="icons.qrc">
-                        <normaloff>:/icons/icons/search.svg</normaloff>:/icons/icons/search.svg</iconset>
+                       <iconset>
+                        <normaloff>:search.svg</normaloff>:search.svg</iconset>
                       </property>
                      </widget>
                     </item>
@@ -1250,7 +1250,7 @@ border: none
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>680</width>
+                   <width>255</width>
                    <height>512</height>
                   </rect>
                  </property>
